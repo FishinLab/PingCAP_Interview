@@ -6,6 +6,7 @@ import com.pingcap.join.meta.Table;
 import com.pingcap.join.operator.HashJoin;
 import com.pingcap.join.operator.JoinOperator;
 import com.pingcap.join.operator.NestLoopJoin;
+import com.pingcap.join.operator.SortMergeJoin;
 
 public class Main {
   private static final String NATIVE_SQL = "select count(*) from dbfree_instance_list list join dbfree_instance_status status " +
@@ -31,6 +32,8 @@ public class Main {
       return new HashJoin(left, right);
     } else if (joinType == JoinOperator.JOIN_TYPE.NEST_LOOP) {
       return new NestLoopJoin(left, right);
+    } else if (joinType == JoinOperator.JOIN_TYPE.SORT_MERGE) {
+      return new SortMergeJoin(left, right);
     } else {
       return null;
     }
@@ -45,7 +48,7 @@ public class Main {
     count(operator);
   }
 
-  public void hashJoin() throws Exception {
+  private void hashJoin() throws Exception {
     JoinOperator operator = getJoin(JoinOperator.JOIN_TYPE.HASH);
 
     assert operator != null;
